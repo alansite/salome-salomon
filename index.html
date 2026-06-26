@@ -25,8 +25,7 @@
   #splash {
     position: relative; z-index: 2;
     min-height: 100vh; min-height: 100svh;
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: flex-start;   /* tout remonté vers le haut */
+    display: flex; flex-direction: column;
     text-align: center;
     background: var(--cream);
     overflow: hidden;
@@ -43,21 +42,27 @@
   .splash-scrim {
     position: absolute; inset: 0; z-index: 1;
     background: linear-gradient(to bottom,
-      rgba(253,249,245,0.55) 0%,
-      rgba(253,249,245,0.20) 30%,
-      rgba(253,249,245,0.18) 70%,
+      rgba(253,249,245,0.50) 0%,
+      rgba(253,249,245,0.18) 28%,
+      rgba(253,249,245,0.14) 62%,
       rgba(253,249,245,0.40) 100%);
   }
 
-  /* Tout le contenu du splash, regroupé et remonté */
+  /* Contenu du splash : prénoms en haut, décompte + bouton en bas */
   .splash-content {
     position: relative; z-index: 2;
-    width: 100%;
-    padding: clamp(28px, 9vh, 80px) 20px 30px;
-    display: flex; flex-direction: column; align-items: center; gap: 16px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.4s both;
+    width: 100%; flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: clamp(34px, 7vh, 80px) 20px clamp(34px, 6vh, 64px);
+    transition: opacity 0.7s ease, visibility 0.7s ease;
   }
+  .splash-head { display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 0; animation: fadeUp 1s ease 0.4s both; }
+  .splash-foot { display: flex; flex-direction: column; align-items: center; gap: 22px; opacity: 0; animation: fadeUp 1s ease 0.7s both; }
+
+  /* Quand l'invitation est ouverte : la photo (et tout le reste) restent identiques,
+     seul le bouton disparaît -> l'utilisateur ne voit aucun changement, il scrolle */
+  #splash.opened .see-btn { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+
   .splash-logo-img {
     width: 58px; height: 58px;
     object-fit: contain;
@@ -70,22 +75,25 @@
     text-shadow: 0 2px 14px rgba(253,249,245,0.85);
   }
 
-  /* Compte à rebours en ronds bordeaux */
-  .countdown-wrapper { display: flex; gap: 11px; flex-wrap: nowrap; justify-content: center; }
+  /* Compte à rebours : 4 ronds répartis sur TOUTE la largeur (style Judith & Ilan) */
+  .countdown-wrapper {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%; max-width: 460px; margin: 0 auto;
+  }
   .countdown-item {
-    width: 72px; height: 72px;
+    flex: 1 1 0; aspect-ratio: 1 / 1;
+    margin: 0 -8px;                 /* léger chevauchement comme le modèle */
     border-radius: 50%;
     border: 1.5px solid var(--bx);
-    background: rgba(253,249,245,0.30);
+    background: rgba(253,249,245,0.16);
     backdrop-filter: blur(2px);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     box-shadow: 0 4px 14px rgba(122,16,48,0.12);
   }
-  .countdown-digits { font-size: 1.45rem; font-weight: 600; color: var(--bx-dark); line-height: 1; }
-  .countdown-label { font-size: 0.6rem; font-style: italic; color: var(--bx); margin-top: 3px; }
+  .countdown-digits { font-size: clamp(1.3rem, 6.5vw, 1.75rem); font-weight: 600; color: var(--bx-dark); line-height: 1; }
+  .countdown-label { font-size: clamp(0.56rem, 2.7vw, 0.72rem); font-style: italic; color: var(--bx); margin-top: 4px; }
 
   .see-btn {
-    margin-top: 6px;
     padding: 15px 42px;
     background: var(--bx); color: var(--white);
     font-family: 'Cormorant Garamond', serif; font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase;
@@ -270,8 +278,6 @@
 
   @media (max-width: 500px) {
     .splash-names { font-size: 2.5rem; }
-    .countdown-item { width: 68px; height: 68px; }
-    .countdown-digits { font-size: 1.3rem; }
     .big-name { font-size: 2.1rem; }
     nav { padding: 10px 12px; }
   }
@@ -297,15 +303,19 @@
   <div class="splash-scrim"></div>
 
   <div class="splash-content">
-    <img class="splash-logo-img" src="logo.png" alt="SS">
-    <div class="splash-names">Salomé &amp; Salomon</div>
-    <div class="countdown-wrapper">
-      <div class="countdown-item"><span class="countdown-digits" id="cd">–</span><span class="countdown-label">Jours</span></div>
-      <div class="countdown-item"><span class="countdown-digits" id="ch">–</span><span class="countdown-label">Heures</span></div>
-      <div class="countdown-item"><span class="countdown-digits" id="cm">–</span><span class="countdown-label">Minutes</span></div>
-      <div class="countdown-item"><span class="countdown-digits" id="cs">–</span><span class="countdown-label">Secondes</span></div>
+    <div class="splash-head">
+      <img class="splash-logo-img" src="logo.png" alt="SS">
+      <div class="splash-names">Salomé &amp; Salomon</div>
     </div>
-    <button class="see-btn" onclick="openInvitation()">Voir l'invitation</button>
+    <div class="splash-foot">
+      <div class="countdown-wrapper">
+        <div class="countdown-item"><span class="countdown-digits" id="cd">–</span><span class="countdown-label">Jours</span></div>
+        <div class="countdown-item"><span class="countdown-digits" id="ch">–</span><span class="countdown-label">Heures</span></div>
+        <div class="countdown-item"><span class="countdown-digits" id="cm">–</span><span class="countdown-label">Minutes</span></div>
+        <div class="countdown-item"><span class="countdown-digits" id="cs">–</span><span class="countdown-label">Secondes</span></div>
+      </div>
+      <button class="see-btn" onclick="openInvitation()">Voir l'invitation &nbsp;›</button>
+    </div>
   </div>
 </div>
 
@@ -573,14 +583,11 @@ function openInvitation() {
   // Le clic est un geste utilisateur => la lecture est autorisée par les navigateurs
   music.play().then(() => setPlayingUI(true)).catch(() => setPlayingUI(false));
 
-  const invit = document.getElementById('invitation');
-  invit.classList.add('revealed');
+  // La même photo reste affichée (seul le bouton disparaît). Aucun saut.
+  document.getElementById('splash').classList.add('opened');
+  document.getElementById('invitation').classList.add('revealed');
   audioBar.style.display = 'flex';
-
-  // Petit délai pour laisser le contenu s'afficher, puis on scrolle dessus
-  setTimeout(() => {
-    document.getElementById('mairie').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 120);
+  // Pas de scroll automatique : l'utilisateur fait défiler lui-même vers la Mairie.
 }
 
 /* ── Scroll reveal ── */
