@@ -21,78 +21,131 @@
   html { scroll-behavior: smooth; }
   body { font-family: 'Cormorant Garamond', serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
 
-  /* ── SPLASH ── */
+  /* ── SPLASH (style photo plein écran type "Judith & Ilan") ── */
   #splash {
     position: fixed; inset: 0; z-index: 1000;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    text-align: center;
     background: var(--cream);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 0.8s ease, visibility 0.8s ease;
     overflow: hidden;
   }
   #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-  .splash-floral-frame {
+  /* Photo en fond plein écran */
+  .splash-bg {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
-    object-fit: contain; object-position: center;
-    pointer-events: none;
-    opacity: 0;
-    animation: floralIn 1.4s ease 0.2s forwards;
+    object-fit: cover; object-position: center;
+    z-index: 0;
   }
-  @keyframes floralIn { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: scale(1); } }
+  /* Léger voile clair pour la lisibilité du bordeaux par-dessus la photo */
+  .splash-scrim {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(to bottom,
+      rgba(253,249,245,0.55) 0%,
+      rgba(253,249,245,0.18) 32%,
+      rgba(253,249,245,0.18) 70%,
+      rgba(253,249,245,0.45) 100%);
+  }
 
-  .splash-content {
+  /* Bloc du haut : prénoms + compte à rebours */
+  .splash-top {
     position: relative; z-index: 2;
-    display: flex; flex-direction: column; align-items: center; gap: 16px;
-    padding: 60px 30px;
+    width: 100%;
+    padding: 64px 20px 0;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+  .splash-logo-img {
+    width: 64px; height: 64px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(255,255,255,0.6));
+  }
+  .splash-names {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem; color: var(--bx-dark);
+    line-height: 1.05;
+    text-shadow: 0 2px 14px rgba(253,249,245,0.85);
+  }
+
+  /* Compte à rebours en ronds bordeaux */
+  .countdown-wrapper { display: flex; gap: 12px; flex-wrap: nowrap; justify-content: center; }
+  .countdown-item {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    border: 1.5px solid var(--bx);
+    background: rgba(253,249,245,0.30);
+    backdrop-filter: blur(2px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(122,16,48,0.12);
+  }
+  .countdown-digits { font-size: 1.5rem; font-weight: 600; color: var(--bx-dark); line-height: 1; }
+  .countdown-label { font-size: 0.62rem; font-style: italic; color: var(--bx); margin-top: 3px; }
+
+  /* Bouton en bas au milieu */
+  .splash-bottom {
+    position: relative; z-index: 2;
+    width: 100%;
+    padding: 0 20px 56px;
+    display: flex; justify-content: center;
     opacity: 0;
     animation: fadeUp 1s ease 0.9s both;
   }
-  .splash-photo-frame {
-    width: 140px; height: 180px;
-    border-radius: 70px 70px 6px 6px;
-    overflow: hidden;
-    border: 3px solid var(--bx-light);
-    box-shadow: 0 8px 32px rgba(122,16,48,0.18);
-    margin-bottom: 8px;
-  }
-  .splash-photo-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-
-  /* Logo SS image sur le splash */
-  .splash-logo-img {
-    width: 80px; height: 80px;
-    object-fit: contain;
-    opacity: 0.92;
-    filter: drop-shadow(0 2px 6px rgba(122,16,48,0.15));
-  }
-
-  .splash-names { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--bx-dark); text-align: center; line-height: 1.1; }
-  .countdown-wrapper { display: flex; gap: 18px; margin: 10px 0; }
-  .countdown-item { display: flex; flex-direction: column; align-items: center; min-width: 44px; }
-  .countdown-digits { font-size: 1.4rem; font-weight: 600; color: var(--text); line-height: 1; }
-  .countdown-label { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); margin-top: 3px; }
   .see-btn {
-    margin-top: 8px; padding: 13px 36px;
+    padding: 15px 42px;
     background: var(--bx); color: var(--white);
-    font-family: 'Cormorant Garamond', serif; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+    font-family: 'Cormorant Garamond', serif; font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase;
     border: none; cursor: pointer; border-radius: 2px;
-    box-shadow: 0 4px 16px rgba(122,16,48,0.28);
+    box-shadow: 0 6px 22px rgba(122,16,48,0.32);
     transition: background 0.2s, transform 0.15s;
   }
   .see-btn:hover { background: var(--bx-dark); transform: translateY(-1px); }
 
-  /* ── NAV ── */
+  /* ── NAV (logo gauche + menu déroulant / hamburger droite, fond blanc) ── */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(253,249,245,0.96); backdrop-filter: blur(8px);
+    background: var(--white);
     border-bottom: 1px solid rgba(122,16,48,0.14);
     padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
   }
-  .nav-logo-img { height: 36px; width: auto; object-fit: contain; }
-  .nav-links { display: flex; gap: 0; list-style: none; overflow-x: auto; }
-  .nav-links::-webkit-scrollbar { display: none; }
-  .nav-links a { display: block; padding: 6px 10px; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-light); text-decoration: none; white-space: nowrap; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--bx); }
+  .nav-logo-img { height: 38px; width: auto; object-fit: contain; }
+
+  .menu-toggle {
+    background: none; border: none; cursor: pointer;
+    width: 38px; height: 38px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  }
+  .menu-toggle span {
+    display: block; width: 24px; height: 2px; background: var(--bx-dark);
+    transition: transform 0.3s ease, opacity 0.2s ease;
+  }
+  .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle.open span:nth-child(2) { opacity: 0; }
+  .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .nav-dropdown {
+    position: absolute; top: 100%; right: 0;
+    width: 220px;
+    background: var(--white);
+    border: 1px solid rgba(122,16,48,0.12);
+    box-shadow: 0 12px 32px rgba(122,16,48,0.14);
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+    max-height: 0; opacity: 0; visibility: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease, visibility 0.25s ease;
+  }
+  .nav-dropdown.open { max-height: 360px; opacity: 1; visibility: visible; }
+  .nav-dropdown a {
+    display: block; padding: 14px 22px;
+    font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-light); text-decoration: none;
+    border-bottom: 1px solid rgba(122,16,48,0.07);
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-dropdown a:last-child { border-bottom: none; }
+  .nav-dropdown a:hover { background: var(--bx-pale); color: var(--bx); }
 
   /* ── SECTIONS ── */
   .section { padding: 64px 24px; position: relative; overflow: hidden; }
@@ -111,16 +164,14 @@
 
   .section-inner { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
 
-  /* Logo SS dans chaque section */
   .section-logo-img { width: 52px; height: 52px; object-fit: contain; opacity: 0.85; }
 
   .section-title {
     font-family: 'Great Vibes', cursive;
-    font-size: 2.8rem; /* plus grand pour éviter la coupure */
+    font-size: 2.8rem;
     color: var(--bx-dark); line-height: 1.15;
-    white-space: nowrap; /* ne jamais couper sur une ligne */
+    white-space: nowrap;
   }
-  /* Sur très petit écran, autoriser le wrap mais jamais mid-word */
   @media (max-width: 360px) {
     .section-title { font-size: 2.2rem; white-space: normal; word-break: keep-all; }
   }
@@ -185,7 +236,6 @@
   .reveal.visible .anim-child-5 { animation: fadeUp 0.7s ease 0.58s both; }
   .reveal.visible .anim-child-6 { animation: fadeUp 0.7s ease 0.72s both; }
 
-  /* Shimmer sur les titres */
   .shimmer-title {
     background: linear-gradient(90deg, var(--bx-dark) 20%, var(--bx-light) 50%, var(--bx-dark) 80%);
     background-size: 200% auto;
@@ -196,7 +246,6 @@
     animation: fadeUp 0.7s ease 0.18s both, shimmer 2.5s ease 0.8s 1 forwards;
   }
 
-  /* Anneaux pulsants */
   .pulse-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .pulse-ring {
     position: absolute; border-radius: 50%; border: 1px solid rgba(122,16,48,0.1);
@@ -224,7 +273,9 @@
   #audio-bar svg { flex-shrink: 0; }
 
   @media (max-width: 500px) {
-    .splash-names { font-size: 2.2rem; }
+    .splash-names { font-size: 2.5rem; }
+    .countdown-item { width: 68px; height: 68px; }
+    .countdown-digits { font-size: 1.3rem; }
     .big-name { font-size: 2.1rem; }
     nav { padding: 10px 12px; }
   }
@@ -232,12 +283,12 @@
 </head>
 <body>
 
-<!-- Audio (silencieux au chargement) -->
-<audio id="bg-music" loop preload="none">
+<!-- Audio : la musique démarre au clic sur "Voir l'invitation" -->
+<audio id="bg-music" loop preload="auto">
   <source src="musique.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Barre audio flottante -->
+<!-- Barre audio flottante (apparaît une fois entré) -->
 <div id="audio-bar" onclick="toggleMusic()" title="Musique">
   <svg id="audio-icon-play"  width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
   <svg id="audio-icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
@@ -246,33 +297,38 @@
 
 <!-- ══ SPLASH ══ -->
 <div id="splash">
-  <img class="splash-floral-frame" src="fleur1.png" alt="">
-  <div class="splash-content">
-    <div class="splash-photo-frame">
-      <img src="photo.jpeg" alt="Salomé &amp; Salomon">
-    </div>
+  <img class="splash-bg" src="photo.jpeg" alt="Salomé &amp; Salomon">
+  <div class="splash-scrim"></div>
+
+  <div class="splash-top">
     <img class="splash-logo-img" src="logo.png" alt="SS">
     <div class="splash-names">Salomé &amp; Salomon</div>
     <div class="countdown-wrapper">
       <div class="countdown-item"><span class="countdown-digits" id="cd">–</span><span class="countdown-label">Jours</span></div>
-      <div class="countdown-item"><span class="countdown-digits" id="ch">–</span><span class="countdown-label">Hrs</span></div>
-      <div class="countdown-item"><span class="countdown-digits" id="cm">–</span><span class="countdown-label">Min</span></div>
-      <div class="countdown-item"><span class="countdown-digits" id="cs">–</span><span class="countdown-label">Sec</span></div>
+      <div class="countdown-item"><span class="countdown-digits" id="ch">–</span><span class="countdown-label">Heures</span></div>
+      <div class="countdown-item"><span class="countdown-digits" id="cm">–</span><span class="countdown-label">Minutes</span></div>
+      <div class="countdown-item"><span class="countdown-digits" id="cs">–</span><span class="countdown-label">Secondes</span></div>
     </div>
+  </div>
+
+  <div class="splash-bottom">
     <button class="see-btn" onclick="openInvitation()">Voir l'invitation</button>
   </div>
 </div>
 
 <!-- ══ NAV ══ -->
 <nav id="main-nav" style="display:none">
-  <img class="nav-logo-img" src="logo.jpeg" alt="SS">
-  <ul class="nav-links">
-    <li><a href="#mairie">Mairie</a></li>
-    <li><a href="#after">After</a></li>
-    <li><a href="#houppa">Houppa</a></li>
-    <li><a href="#shabbat">Chabbat</a></li>
-    <li><a href="#reponse">Réponse</a></li>
-  </ul>
+  <img class="nav-logo-img" src="logo.png" alt="SS">
+  <button class="menu-toggle" id="menu-toggle" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-dropdown" id="nav-dropdown">
+    <a href="#mairie"  onclick="closeMenu()">Mairie</a>
+    <a href="#after"   onclick="closeMenu()">After Mairie</a>
+    <a href="#houppa"  onclick="closeMenu()">Houppa &amp; Soirée</a>
+    <a href="#shabbat" onclick="closeMenu()">Chabbat Hatan</a>
+    <a href="#reponse" onclick="closeMenu()">Réponse</a>
+  </div>
 </nav>
 
 <!-- ══ MAIRIE ══ -->
@@ -303,9 +359,39 @@
   </div>
 </section>
 
-
-
+<!-- Photo après la Mairie -->
 <div class="photo-divider"><img src="photo2.jpeg" alt=""></div>
+
+<!-- ══ AFTER MAIRIE ══ -->
+<section class="section marble-bg" id="after">
+  <div class="pulse-wrap"><div class="pulse-ring"></div><div class="pulse-ring"></div><div class="pulse-ring"></div></div>
+  <div class="section-inner reveal">
+    <h2 class="section-title shimmer-title anim-child-1">L'After Mairie</h2>
+    <div class="gold-divider anim-child-2"></div>
+    <p class="anim-child-3" style="font-family:'Great Vibes',cursive;font-size:1.6rem;color:var(--bx-dark)">Salomé &amp; Salomon</p>
+    <p class="body-text anim-child-3">vous convient à célébrer ce moment</p>
+    <div class="gold-divider anim-child-3"></div>
+    <p class="body-text anim-child-4">
+      <strong>Le Lundi 1<sup>er</sup> Février 2027<br>à [HEURE À COMPLÉTER]</strong>
+      [NOM DU LIEU À COMPLÉTER]<br>
+      [ADRESSE À COMPLÉTER],<br>[CODE POSTAL / VILLE]
+    </p>
+    <p class="body-text anim-child-4" style="font-style:italic;font-size:0.95rem">Réservé aux invités conviés</p>
+    <div class="btn-row anim-child-5">
+      <a href="https://maps.google.com/?q=ADRESSE+AFTER+MAIRIE" class="btn-primary" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Itinéraire Google Maps
+      </a>
+      <a href="after.ics" download class="btn-outline">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Ajouter au calendrier
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Photo après l'After Mairie -->
+<div class="photo-divider"><img src="photo3.jpeg" alt=""></div>
 
 <!-- ══ HOUPPA ══ -->
 <section class="section marble-bg" id="houppa">
@@ -317,7 +403,7 @@
     <div class="gold-divider anim-child-3"></div>
     <div class="family-grid anim-child-3">
       <p style="text-align:right">Famille Laloum &amp; Nizard</p>
-      <p style="text-align:left">Famille Braham &amp; Laloum</p>
+      <p style="text-align:left">Famille Chichportich &amp; Edery</p>
       <p class="family-full">ont la joie de vous faire part du mariage de leurs petits-enfants et enfants</p>
     </div>
     <div class="couple-names anim-child-4">
@@ -353,7 +439,8 @@
   </div>
 </section>
 
-<div class="photo-divider"><img src="photo3.jpeg" alt=""></div>
+<!-- Photo après la Houppa -->
+<div class="photo-divider"><img src="photo4.jpeg" alt=""></div>
 
 <!-- ══ CHABBAT HATAN ══ -->
 <section class="section marble-bg" id="shabbat">
@@ -376,6 +463,7 @@
       64 Avenue Marceau,<br>75008 Paris
     </p>
     <p class="body-text anim-child-4" style="font-style:italic;font-size:0.95rem">Les offices seront suivis d'un repas</p>
+    <p class="body-text anim-child-4" style="font-style:italic;font-size:0.9rem;color:var(--text-light)">Réservé aux invités conviés</p>
     <div class="btn-row anim-child-5">
       <a href="https://maps.google.com/?q=64+Avenue+Marceau+75008+Paris" class="btn-primary" target="_blank">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
@@ -389,7 +477,8 @@
   </div>
 </section>
 
-<div class="photo-divider"><img src="photo4.jpeg" alt=""></div>
+<!-- Photo après le Chabbat (réutilise la photo d'accueil) -->
+<div class="photo-divider"><img src="photo.jpeg" alt=""></div>
 
 <!-- ══ RÉPONSE ══ -->
 <section class="section form-section" id="reponse">
@@ -453,41 +542,44 @@ updateCountdown();
 setInterval(updateCountdown, 1000);
 
 /* ── Musique ── */
-const music   = document.getElementById('bg-music');
+const music    = document.getElementById('bg-music');
 const audioBar = document.getElementById('audio-bar');
 const iconPlay  = document.getElementById('audio-icon-play');
 const iconPause = document.getElementById('audio-icon-pause');
 const audioLabel = document.getElementById('audio-label');
 
-function toggleMusic() {
-  if (music.paused) {
-    music.play();
-    iconPlay.style.display  = 'none';
-    iconPause.style.display = 'block';
-    audioLabel.textContent  = 'Pause';
-  } else {
-    music.pause();
-    iconPlay.style.display  = 'block';
-    iconPause.style.display = 'none';
-    audioLabel.textContent  = 'Musique';
-  }
+function setPlayingUI(playing) {
+  iconPlay.style.display  = playing ? 'none'  : 'block';
+  iconPause.style.display = playing ? 'block' : 'none';
+  audioLabel.textContent  = playing ? 'Pause' : 'Musique';
 }
 
-/* ── Ouverture invitation ── */
+function toggleMusic() {
+  if (music.paused) { music.play(); setPlayingUI(true); }
+  else              { music.pause(); setPlayingUI(false); }
+}
+
+/* ── Menu déroulant ── */
+const menuToggle = document.getElementById('menu-toggle');
+const navDropdown = document.getElementById('nav-dropdown');
+function toggleMenu() {
+  menuToggle.classList.toggle('open');
+  navDropdown.classList.toggle('open');
+}
+function closeMenu() {
+  menuToggle.classList.remove('open');
+  navDropdown.classList.remove('open');
+}
+
+/* ── Ouverture invitation : la musique se lance DIRECTEMENT au clic ── */
 function openInvitation() {
+  // Le clic est un geste utilisateur => la lecture est autorisée par les navigateurs
+  music.play().then(() => setPlayingUI(true)).catch(() => setPlayingUI(false));
+
   document.getElementById('splash').classList.add('hidden');
   document.getElementById('main-nav').style.display = 'flex';
-  window.scrollTo(0, 0);
-
-  // Lancer la musique (nécessite geste utilisateur — le clic sur le bouton suffit)
-  music.play().then(() => {
-    iconPlay.style.display  = 'none';
-    iconPause.style.display = 'block';
-    audioLabel.textContent  = 'Pause';
-  }).catch(() => { /* autoplay bloqué sur certains navigateurs, l'user peut cliquer la barre */ });
-
-  // Afficher la barre audio
   audioBar.style.display = 'flex';
+  window.scrollTo(0, 0);
 }
 
 /* ── Scroll reveal ── */
@@ -496,10 +588,12 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-/* ── Google Sheets RSVP ──
-   Remplacer VOTRE_URL par l'URL de déploiement de votre Apps Script.
-
-   Code Apps Script (Extensions > Apps Script dans Google Sheets) :
+/* ════════════════════════════════════════════════════════════════
+   RSVP → GOOGLE SHEET
+   1) Dans ton Google Sheet : Extensions > Apps Script, colle le code
+      doPost ci-dessous, puis Déployer > Application Web
+      (Exécuter en tant que : Moi | Accès : Tout le monde).
+   2) Copie l'URL de déploiement (…/exec) et colle-la dans SCRIPT_URL.
 
    function doPost(e) {
      const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -510,11 +604,8 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
      sheet.appendRow([d.date||'', d.nom||'', d.prenom||'', d.mairie||'', d.after||'', d.houppa||'', d.shabbat||'', d.message||'']);
      return ContentService.createTextOutput(JSON.stringify({status:'ok'})).setMimeType(ContentService.MimeType.JSON);
    }
-
-   Déployer > Nouvelle déploiement > Application Web
-   Exécuter en tant que : Moi  |  Accès : Tout le monde
-*/
-const GOOGLE_SHEET_URL = 'VOTRE_URL';
+   ════════════════════════════════════════════════════════════════ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/TON_ID_DE_DEPLOIEMENT/exec';
 
 async function submitForm(e) {
   e.preventDefault();
@@ -539,7 +630,7 @@ async function submitForm(e) {
   };
 
   try {
-    await fetch(GOOGLE_SHEET_URL, {
+    await fetch(SCRIPT_URL, {
       method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
