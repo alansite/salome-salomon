@@ -689,23 +689,6 @@ function getCount(key) {
   return '0';
 }
 
-/* ════════════════════════════════════════════════════════════════
-   RSVP → GOOGLE SHEET
-   1) Dans ton Google Sheet : Extensions > Apps Script, colle le code
-      doPost ci-dessous, puis Déployer > Application Web
-      (Exécuter en tant que : Moi | Accès : Tout le monde).
-   2) Copie l'URL de déploiement (…/exec) et colle-la dans SCRIPT_URL.
-
-   function doPost(e) {
-     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-     if (sheet.getLastRow() === 0) {
-       sheet.appendRow(['Date','Nom','Prénom','Mairie (nb)','After (nb)','Houppa (nb)','Chabbat (nb)','Message']);
-     }
-     const d = JSON.parse(e.postData.contents);
-     sheet.appendRow([d.date||'', d.nom||'', d.prenom||'', d.mairie||'0', d.after||'0', d.houppa||'0', d.shabbat||'0', d.message||'']);
-     return ContentService.createTextOutput(JSON.stringify({status:'ok'})).setMimeType(ContentService.MimeType.JSON);
-   }
-   ════════════════════════════════════════════════════════════════ */
 const SCRIPT_URL = 'https://script.google.com/macros/s/TON_ID_DE_DEPLOIEMENT/exec';
 
 async function submitForm(e) {
