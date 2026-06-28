@@ -195,7 +195,9 @@
   }
 
   .hebrew-text { font-size: 1.15rem; color: var(--text-light); direction: rtl; line-height: 1.8; }
-  .family-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; width: 100%; font-size: 1.0rem; color: var(--text-light); font-style: italic; line-height: 1.85; }
+  .family-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; width: 100%; font-size: clamp(0.78rem, 3.3vw, 0.98rem); color: var(--text-light); font-style: italic; line-height: 1.9; }
+  .family-grid > p { white-space: nowrap; }
+  .family-grid > p.family-full { white-space: normal; }
   .fam-gap { display: block; height: 0.8em; }
   .family-full { grid-column: 1/-1; }
   .couple-names { display: flex; align-items: flex-end; gap: 16px; justify-content: center; width: 100%; flex-wrap: wrap; }
@@ -450,7 +452,7 @@
     <div class="gold-divider anim-child-3"></div>
     <div class="family-grid anim-child-3">
       <p style="text-align:right">Claudine &amp; Léon Laloum<br>Michele &amp; Henri Nizard<span class="fam-gap"><br></span>Sophie &amp; Karl Laloum</p>
-     <p style="text-align:left;padding-left:24px">Rebecca Edery<br>Clotilde Chichportich &amp; Joelle &amp; Jacques Chichportich</p>
+      <p style="text-align:left">Rebecca Edery<br>Clotilde Chichportich<span class="fam-gap"><br></span>Joelle &amp; Jacques Chichportich</p>
       <p class="family-full">ont la joie de vous faire part du mariage de leurs petits-enfants et enfants</p>
     </div>
     <div class="couple-names anim-child-4">
