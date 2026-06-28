@@ -103,6 +103,20 @@
   }
   .see-btn:hover { background: var(--bx-dark); transform: translateY(-1px); }
 
+  /* Flèche "descendre" : apparaît après l'ouverture, invite à scroller */
+  .scroll-down-btn {
+    display: none;
+    background: rgba(253,249,245,0.55); backdrop-filter: blur(2px);
+    border: 1.5px solid var(--bx);
+    width: 48px; height: 48px; border-radius: 50%;
+    align-items: center; justify-content: center;
+    cursor: pointer; color: var(--bx-dark);
+    box-shadow: 0 4px 14px rgba(122,16,48,0.22);
+    animation: arrowBounce 1.8s ease-in-out infinite;
+  }
+  #splash.opened .scroll-down-btn { display: inline-flex; }
+  @keyframes arrowBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(9px)} }
+
   /* Contenu de l'invitation, masqué jusqu'au clic sur le bouton */
   #invitation { display: none; }
   #invitation.revealed { display: block; animation: fadeUp 0.8s ease both; }
@@ -339,6 +353,9 @@
         <div class="countdown-item"><span class="countdown-digits" id="cs">–</span><span class="countdown-label">Secondes</span></div>
       </div>
       <button class="see-btn" onclick="openInvitation()">Voir l'invitation &nbsp;›</button>
+      <button class="scroll-down-btn" onclick="document.getElementById('mairie').scrollIntoView({behavior:'smooth'})" aria-label="Descendre">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
     </div>
   </div>
 </div>
@@ -432,7 +449,7 @@
     <div class="gold-divider anim-child-3"></div>
     <div class="family-grid anim-child-3">
       <p style="text-align:right">Famille Laloum &amp; Nizard</p>
-      <p style="text-align:left">Famille Chichportich &amp; Edery</p>
+      <p style="text-align:left">Rebecca Edery<br>Clotilde Chichportich<br>Joelle &amp; Jacques Chichportich</p>
       <p class="family-full">ont la joie de vous faire part du mariage de leurs petits-enfants et enfants</p>
     </div>
     <div class="couple-names anim-child-4">
@@ -611,14 +628,14 @@
 
 <footer>
   <div class="footer-names">Salomé &amp; Salomon</div>
-  <p class="footer-text">01 . 02 . 2027</p>
+  <p class="footer-text">07 . 02 . 2027</p>
 </footer>
 
 </div><!-- /#invitation -->
 
 <script>
 /* ── Compte à rebours ── */
-const target = new Date('2027-02-01T15:30:00+01:00');
+const target = new Date('2027-02-07T17:30:00+01:00');
 function updateCountdown() {
   const diff = target - new Date();
   if (diff <= 0) { ['cd','ch','cm','cs'].forEach(id => document.getElementById(id).textContent = '0'); return; }
@@ -689,6 +706,23 @@ function getCount(key) {
   return '0';
 }
 
+/* ════════════════════════════════════════════════════════════════
+   RSVP → GOOGLE SHEET
+   1) Dans ton Google Sheet : Extensions > Apps Script, colle le code
+      doPost ci-dessous, puis Déployer > Application Web
+      (Exécuter en tant que : Moi | Accès : Tout le monde).
+   2) Copie l'URL de déploiement (…/exec) et colle-la dans SCRIPT_URL.
+
+   function doPost(e) {
+     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+     if (sheet.getLastRow() === 0) {
+       sheet.appendRow(['Date','Nom','Prénom','Mairie (nb)','After (nb)','Houppa (nb)','Chabbat (nb)','Message']);
+     }
+     const d = JSON.parse(e.postData.contents);
+     sheet.appendRow([d.date||'', d.nom||'', d.prenom||'', d.mairie||'0', d.after||'0', d.houppa||'0', d.shabbat||'0', d.message||'']);
+     return ContentService.createTextOutput(JSON.stringify({status:'ok'})).setMimeType(ContentService.MimeType.JSON);
+   }
+   ════════════════════════════════════════════════════════════════ */
 const SCRIPT_URL = 'https://script.google.com/macros/s/TON_ID_DE_DEPLOIEMENT/exec';
 
 async function submitForm(e) {
